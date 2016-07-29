@@ -1,0 +1,28 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.9.1]
+    method: GET
+    uri: https://graph.facebook.com/search?q=Pablo+Moya+Valdivia&access_token=FieraEsLaMejorAmigaDeTodos&type=page
+  response:
+    body: {string: !!python/unicode '{"data":[{"name":"Pablo Moya Concejal por Valdivia","id":"1720493748204793"}],"paging":{"cursors":{"before":"MAZDZD","after":"MAZDZD"}}}'}
+    headers:
+      access-control-allow-origin: ['*']
+      cache-control: ['private, no-cache, no-store, must-revalidate']
+      connection: [keep-alive]
+      content-length: ['136']
+      content-type: [application/json; charset=UTF-8]
+      date: ['Fri, 29 Jul 2016 22:59:29 GMT']
+      etag: ['"ff42391f4b095dd69f633d62fd880322a9f831bf"']
+      expires: ['Sat, 01 Jan 2000 00:00:00 GMT']
+      facebook-api-version: [v2.5]
+      pragma: [no-cache]
+      x-fb-debug: [up3MKthKZHLrv+seXz1DWmUsujE51xQEEFyVjTeZcTHOmYVs9FOD8rYlJ6e+KNyoLOn3LuxQ/N9ps+zlXtgeow==]
+      x-fb-rev: ['2474568']
+      x-fb-trace-id: [AWSy4wXYOJP]
+    status: {code: 200, message: OK}
+version: 1

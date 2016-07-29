@@ -1,0 +1,9 @@
+{% if user.is_staff %}
+	<ul>
+	{% for page in candidate.posible_facebook_pages.all %}
+		{% if page.verified == None %}
+			<li><a href="{{page.url}}">{{page.name}}</a> - Está buena? <a href="{% url 'verificar_si' pk=page.id %}">Si</a> - <a href="">No</a></li> 
+		{% endif %}
+	{% endfor %}
+	</ul>
+{% endif %}
