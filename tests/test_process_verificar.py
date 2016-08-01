@@ -15,8 +15,9 @@ from django.test import override_settings
 from popolo.models import Area
 from vi_municipales_2016.scraper import Scraper
 import vcr
-import os 
+import os
 __dir__ = os.path.dirname(os.path.realpath(__file__))
+
 
 @override_settings(THEME='vi_municipales_2016')
 class ProcessTestCase(TestCase):
@@ -27,9 +28,10 @@ class ProcessTestCase(TestCase):
         self.feli.is_staff = True
         self.feli.save()
 
+    @vcr.use_cassette(__dir__ + '/fixtures/vcr_cassettes/pablo_page.yaml')
     def test_validate_si(self):
         posible_page = PosibleFacebookPage.objects.create(candidate=self.candidate,
-                                                          url='http://facebook.com',
+                                                          url='https://www.facebook.com/PabloMoyaConcejal/',
                                                           name='possible page of the candidate')
         url = '/theme/verificar_si/' + str(posible_page.id)
         self.client.login(username=self.feli.username, password='alvarez')
@@ -62,5 +64,11 @@ class ProcessTestCase(TestCase):
         posible_page = PosibleFacebookPage.objects.get(candidate=candidate)
         self.assertIsNone(posible_page.verified)
 
-    def tearDown(self):
-        pass
+    @vcr.use_cassette(__dir__ + '/fixtures/vcr_cassettes/pablo_page.yaml')
+    def test_get_data_and_include_it_into_the_candidate(self):
+        posible_page = PosibleFacebookPage.objects.create(candidate=self.candidate,
+                                                          url='https://www.facebook.com/PabloMoyaConcejal/',
+                                                          name='Pablo Moya Concejal por Valdivia')
+        posible_page.verify()
+        posible_page = PosibleFacebookPage.objects.get(id=posible_page.id)
+        self.assertTrue(posible_page.candidate.image)

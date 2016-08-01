@@ -27,8 +27,7 @@ class VerificarBase(View):
 
 class VerificarSi(VerificarBase):
     def process(self):
-        self.facebook_page.verified = True
-        self.facebook_page.save()
+        self.facebook_page.verify()
 
 
 class VerificarNo(VerificarBase):
