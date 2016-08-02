@@ -28,7 +28,7 @@ class ProcessTestCase(TestCase):
         self.feli.is_staff = True
         self.feli.save()
 
-    @vcr.use_cassette(__dir__ + '/fixtures/vcr_cassettes/pablo_page.yaml')
+    @vcr.use_cassette(__dir__ + '/fixtures/vcr_cassettes/pablo_page2.yaml')
     def test_validate_si(self):
         posible_page = PosibleFacebookPage.objects.create(candidate=self.candidate,
                                                           url='https://www.facebook.com/PabloMoyaConcejal/',
