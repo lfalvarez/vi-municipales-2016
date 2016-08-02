@@ -9,6 +9,10 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormView
 from elections.models import Candidate
+from django.views.generic.base import RedirectView
+from elections.models import Election
+from vi_municipales_2016.scraper import Scraper
+from django.core.urlresolvers import reverse
 
 
 class VerificarBase(View):
@@ -43,9 +47,13 @@ class VerificarNo(VerificarBase):
 class AgregarFacebookCandidato(FormView):
     form_class = CandidateFacebookPageForm
 
-    def dispatch(self, *args, **kwargs):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.user = request.user
+        if not self.user.is_staff:
+            return HttpResponseNotFound('No encontrado')
         self.candidate = get_object_or_404(Candidate, pk=self.kwargs['pk'])
-        return super(AgregarFacebookCandidato, self).dispatch(*args, **kwargs)
+        return super(AgregarFacebookCandidato, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return self.candidate.get_absolute_url()
@@ -58,3 +66,22 @@ class AgregarFacebookCandidato(FormView):
     def form_valid(self, form):
         form.validate_facebook_page()
         return super(AgregarFacebookCandidato, self).form_valid(form)
+
+
+class ScrapeElectionView(RedirectView):
+    permanent = False
+    query_string = True
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        self.user = self.request.user
+        if not self.user.is_staff:
+            return HttpResponseNotFound('No encontrado')
+        self.election = get_object_or_404(Election,
+                                          slug=self.kwargs['slug'])
+        return super(ScrapeElectionView, self).dispatch(*args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        scraper = Scraper()
+        scraper.scrape(self.election)
+        return reverse('election_view', kwargs={'slug': self.election.slug})

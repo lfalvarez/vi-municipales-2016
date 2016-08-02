@@ -1,0 +1,6 @@
+{% load bootstrap3 %}
+<form action="{% url 'agregar_facebook_a_candidato' pk=candidate.pk %}" method='post' >
+{% csrf_token %}
+{% bootstrap_form form %}
+<input type='submit' value="Enviar">
+</form>
