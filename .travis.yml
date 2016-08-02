@@ -1,14 +1,14 @@
 # Config file for automatic testing at travis-ci.org
 
 language: python
-
+sudo: false
 python:
   - "2.7"
 
 before_install:
   - pip install codecov
   - git clone https://github.com/ciudadanointeligente/votainteligente-portal-electoral.git
-  - pip install votainteligente-portal-electoral/requirements.txt
+  - pip install -r votainteligente-portal-electoral/requirements.txt
   - echo 'THEME="vi_municipales_2016" >> votainteligente-portal-electoral/votainteligente/local_settings.py'
   - python setup.py install
 
