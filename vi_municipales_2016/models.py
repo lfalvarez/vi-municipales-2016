@@ -15,8 +15,6 @@ class PosibleFacebookPage(models.Model):
     verified = models.NullBooleanField(default=None)
 
     def verify(self):
-
-    	print self.url
     	result = facebook_getter(self.url)
     	self.verified = True
     	self.save()

@@ -12,7 +12,7 @@ from popular_proposal.tests import ProposingCycleTestCaseBase as TestCase
 from vi_municipales_2016.models import PosibleFacebookPage
 from elections.models import Candidate, Election
 from django.test import override_settings
-from popolo.models import Area
+from popolo.models import Area, ContactDetail
 from vi_municipales_2016.scraper import Scraper
 import vcr
 import os
@@ -72,3 +72,16 @@ class ProcessTestCase(TestCase):
         posible_page.verify()
         posible_page = PosibleFacebookPage.objects.get(id=posible_page.id)
         self.assertTrue(posible_page.candidate.image)
+
+    @vcr.use_cassette(__dir__ + '/fixtures/vcr_cassettes/matias_page.yaml')
+    def test_post_page_for_candidate(self):
+        url = reverse('agregar_facebook_a_candidato', kwargs={'pk': self.candidate.pk})
+        self.client.login(username=self.feli.username, password='alvarez')
+        data = {'page': 'https://www.facebook.com/matiasxvaldivia/?fref=ts'}
+        response = self.client.post(url, data=data, follow=True)
+        posible_page = PosibleFacebookPage.objects.get(candidate=self.candidate)
+        self.assertIn(posible_page.url, data['page'])
+        self.assertTrue(posible_page.verified)
+        contact_detail = ContactDetail.objects.get(contact_type='FACEBOOK',
+                                                   value=posible_page.url)
+        self.assertIn(contact_detail, self.candidate.contact_details.all())
