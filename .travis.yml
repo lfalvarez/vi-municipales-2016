@@ -10,10 +10,8 @@ before_install:
   - pip install -r votainteligente-portal-electoral/requirements.txt
   - echo 'THEME="vi_municipales_2016" >> votainteligente-portal-electoral/votainteligente/local_settings.py'
   - python setup.py install
-
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -r requirements_test.txt
-
 # command to run tests using coverage, e.g. python setup.py test
-script: ./votainteligente-portal-electoral/manage.py test test
+script: "./votainteligente-portal-electoral/manage.py test test"
 
