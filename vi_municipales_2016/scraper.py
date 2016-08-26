@@ -7,8 +7,9 @@ TOKEN = settings.FACEBOOK_ACCESS_TOKEN
 
 def string_for_search_generator(candidate):
     names = []
-    names.append(candidate.name + u' ' + candidate.election.area.name)
-    names.append(candidate.name + u' ' + candidate.election.position)
+    name_without_last_surname = candidate.name.rsplit(' ', 1)[0]
+    names.append(name_without_last_surname + u' ' + candidate.election.area.name)
+    names.append(name_without_last_surname + u' ' + candidate.election.position)
     return names
 
 
