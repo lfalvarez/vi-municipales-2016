@@ -5,18 +5,22 @@ from django.conf import settings
 TOKEN = settings.FACEBOOK_ACCESS_TOKEN
 
 
+def string_for_search_generator(candidate):
+    names = []
+    names.append(candidate.name + u' ' + candidate.election.area.name)
+    names.append(candidate.name + u' ' + candidate.election.position)
+    return names
+
+
 class Scraper(object):
     def scrape(self, election):
         graph = facebook.GraphAPI(access_token=TOKEN, version='2.5')
         for candidate in election.candidates.all():
-            comuna = election.area.name
-            candidate_name = candidate.name
-            # cargo = candidate[2]
-            search = candidate_name + u' ' + comuna
-            result = graph.request('search', {'q': search, 'type': 'page'})
-            for data in result['data']:
-                url = 'http://www.facebook.com/' + data['id']
-                page_name = data['name']
-                posible_page, created = PosibleFacebookPage.objects.get_or_create(url=url, name=page_name,
-                        candidate=candidate)
-                print data['name'] + u'- http://www.facebook.com/' + data['id']
+            strings = string_for_search_generator(candidate)
+            for search in strings:
+                result = graph.request('search', {'q': search, 'type': 'page'})
+                for data in result['data']:
+                    url = 'http://www.facebook.com/' + data['id']
+                    page_name = data['name']
+                    posible_page, created = PosibleFacebookPage.objects.get_or_create(url=url, name=page_name,
+                            candidate=candidate)

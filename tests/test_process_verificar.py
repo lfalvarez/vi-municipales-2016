@@ -13,7 +13,7 @@ from vi_municipales_2016.models import PosibleFacebookPage
 from elections.models import Candidate, Election
 from django.test import override_settings
 from popolo.models import Area, ContactDetail
-from vi_municipales_2016.scraper import Scraper
+from vi_municipales_2016.scraper import Scraper, string_for_search_generator
 from vi_municipales_2016.forms import CandidateFacebookPageForm
 import vcr
 import os
@@ -43,6 +43,19 @@ class ProcessTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
         posible_page = PosibleFacebookPage.objects.get(id=posible_page.id)
         self.assertTrue(posible_page.verified)
+
+    def test_string_for_test_generator(self):
+        valdivia = Area.objects.create(name='Valdivia')
+        election = Election.objects.create(area=valdivia, name='Concejales')
+        candidate = Candidate.objects.create(name='Pablo Moya',
+                                             given_name='Pablo',
+                                             family_name='Moya')
+        election.candidates.add(candidate)
+        names = string_for_search_generator(candidate)
+        self.assertIn('Pablo Moya Valdivia', names)
+        self.assertIn('Pablo Moya Concejales', names)
+        self.assertIn('Pablo Valdivia', names)
+        self.assertIn('Moya Valdivia', names)
 
     def test_validate_no(self):
         posible_page = PosibleFacebookPage.objects.create(candidate=self.candidate,
