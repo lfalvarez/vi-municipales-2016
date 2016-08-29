@@ -3,7 +3,7 @@
 from django.db import models
 from elections.models import Candidate
 from model_utils.models import TimeStampedModel
-from votainteligente.facebook_page_getter import facebook_getter
+from vi_municipales_2016.tasks import verify
 
 class PosibleFacebookPage(models.Model):
     url = models.URLField()
@@ -15,15 +15,8 @@ class PosibleFacebookPage(models.Model):
     verified = models.NullBooleanField(default=None)
 
     def verify(self):
-    	result = facebook_getter(self.url)
-    	self.verified = True
-    	self.save()
-    	
-    	self.candidate.image = result['picture_url']
-    	self.candidate.save()
-    	self.candidate.add_contact_detail(contact_type='FACEBOOK',
-    									  label=result['name'],
-    									  value=self.url)
+    	verify.delay(self)
+
 
 class CandidateFacebookPage(TimeStampedModel):
     pass
