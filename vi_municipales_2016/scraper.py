@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from vi_municipales_2016.models import PosibleFacebookPage
 import facebook
 from django.conf import settings
 TOKEN = settings.FACEBOOK_ACCESS_TOKEN
@@ -15,6 +14,7 @@ def string_for_search_generator(candidate):
 
 class Scraper(object):
     def scrape(self, election):
+        from vi_municipales_2016.models import PosibleFacebookPage
         graph = facebook.GraphAPI(access_token=TOKEN, version='2.5')
         for candidate in election.candidates.all():
             strings = string_for_search_generator(candidate)
