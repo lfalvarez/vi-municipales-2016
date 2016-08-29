@@ -12,6 +12,7 @@ from elections.models import Candidate
 from django.views.generic.base import RedirectView
 from elections.models import Election
 from vi_municipales_2016.scraper import Scraper
+from vi_municipales_2016.tasks import scrape_election
 from django.core.urlresolvers import reverse
 
 
@@ -82,6 +83,5 @@ class ScrapeElectionView(RedirectView):
         return super(ScrapeElectionView, self).dispatch(*args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        scraper = Scraper()
-        scraper.scrape(self.election)
+        scrape_election.delay(self.election)
         return reverse('election_view', kwargs={'slug': self.election.slug})
