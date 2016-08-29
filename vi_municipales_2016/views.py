@@ -12,7 +12,7 @@ from elections.models import Candidate
 from django.views.generic.base import RedirectView
 from elections.models import Election
 from vi_municipales_2016.scraper import Scraper
-from vi_municipales_2016.tasks import scrape_election
+from vi_municipales_2016.tasks import scrape_election, verify_facebook_page
 from django.core.urlresolvers import reverse
 
 
@@ -36,7 +36,7 @@ class VerificarBase(View):
 
 class VerificarSi(VerificarBase):
     def process(self):
-        self.facebook_page.verify()
+        verify_facebook_page(self.facebook_page)
 
 
 class VerificarNo(VerificarBase):

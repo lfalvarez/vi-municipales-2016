@@ -12,3 +12,8 @@ logger = logging.getLogger(__name__)
 def scrape_election(election):
     scraper = Scraper()
     scraper.scrape(election)
+
+
+@app.task
+def verify_facebook_page(facebook_page):
+    facebook_page.verify()

@@ -3,7 +3,7 @@
 	<ul>
 	{% for page in candidate.posible_facebook_pages.all %}
 		{% if page.verified == None %}
-			<li><a href="{{page.url}}">{{page.name}}</a> - Está buena? <a href="{% url 'verificar_si' pk=page.id %}">Si</a> - <a href="{% url 'verificar_no' pk=page.id %}">No</a></li> 
+			<li><a href="{{page.url}}">{% if page.name %}{{page.name}}{% else %}http://facebook.com/{{page.url}}{% endif %}</a> - Está buena? <a href="{% url 'verificar_si' pk=page.id %}">Si</a> - <a href="{% url 'verificar_no' pk=page.id %}">No</a></li> 
 		{% endif %}
 	{% endfor %}
 	</ul>

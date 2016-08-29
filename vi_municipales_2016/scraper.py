@@ -17,6 +17,7 @@ class Scraper(object):
     def scrape(self, election):
         graph = facebook.GraphAPI(access_token=TOKEN, version='2.5')
         for candidate in election.candidates.all():
+            print candidate
             strings = string_for_search_generator(candidate)
             for search in strings:
                 result = graph.request('search', {'q': search, 'type': 'page'})
@@ -25,3 +26,4 @@ class Scraper(object):
                     page_name = data['name']
                     posible_page, created = PosibleFacebookPage.objects.get_or_create(url=url, name=page_name,
                             candidate=candidate)
+                    print url, posible_page
